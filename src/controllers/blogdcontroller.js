@@ -29,7 +29,7 @@ const blogModel=require("../models/blogModel")
 const updateBlog=async function(req,res){
    let blogId=req.params.blogId
    let blog= await blogModel.find(blogId)
-   
+
 
    
 }
