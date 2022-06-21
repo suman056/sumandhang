@@ -18,7 +18,7 @@ const blogSchema = new mongoose.Schema( {
     },
     tags:[String],
     category:{
-        type:[String],
+        type:String,
         required:true,
         trim: true
     },
@@ -35,7 +35,9 @@ const blogSchema = new mongoose.Schema( {
         type:Boolean,
         default:false,
         trim: true
-    }
+    },
+    deletedAt: Date,
+    publishedAt: Date
 
   
 }, { timestamps: true });
