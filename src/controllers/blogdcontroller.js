@@ -70,8 +70,12 @@ const getBlog=async function(req,res){
 
 
 const updateBlog=async function(req,res){
+   try{
    let blogId=req.params.blogId
    let blog= await blogModel.find(blogId)
+   }catch(error){
+      res.status().send()
+   }
 }
 
 
@@ -114,9 +118,9 @@ catch(err){
 
 module.exports={
    createAuthor,
+   createBlog,
    getBlog,
    updateBlog,
    deleteBlogById,
    deleteBlogByParams
 }
-module.exports.createBlog = createBlog
