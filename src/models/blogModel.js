@@ -36,6 +36,7 @@ const blogSchema = new mongoose.Schema( {
         default:false,
         trim: true
     }
+
   
 }, { timestamps: true });
 
