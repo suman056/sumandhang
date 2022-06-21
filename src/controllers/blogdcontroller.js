@@ -69,15 +69,6 @@ const getBlog=async function(req,res){
 }
 
 
-const updateBlog=async function(req,res){
-   try{
-   let blogId=req.params.blogId
-   let blog= await blogModel.find(blogId)
-   }catch(error){
-      res.status().send()
-   }
-}
-
 
 
 const deleteBlogById=async function(req,res){
