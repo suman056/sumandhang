@@ -2,6 +2,7 @@
 
 const check= function (req, res) {
    res.send({msg: "my middleware work perfectly"})
+  
 }
 
 

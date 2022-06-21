@@ -6,8 +6,11 @@ const mid2= function ( req, res, next) {
     const date = new Date
     console.log(date);
     console.log(ip)
-    console.log(url)
+    // console.log(url)
+    console.log(req.headers)
+    
     next()
+
 }
 
 module.exports.mid2=mid2
