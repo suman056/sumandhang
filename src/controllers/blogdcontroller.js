@@ -56,20 +56,22 @@ const createBlog=async function(req,res){
 const getBlog=async function(req,res){
    try{
 
-      let query=req.query
+     // let query=req.query
 
-      // let authorId=req.query.author-Id
-      // let category=req.query.category
-      // let tag=req.query.tags
-      let allBlogs=await blogModel.find({isDeleted:false},{isPublished:true},query)
-      if(array.keys(allBlogs)!=0){
-         return res.status(200).send({msg:allBlogs})
-      } else {
+      let authorId=req.query.author_Id
+      //  let category=req.query.category
+      //  let tag=req.query.tags
+      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true})
+      if(!allBlogs){
          return res.status(404).send("there is no such documents")
+      } else {
+         return res.status(200).send({msg:allBlogs})
+        
    }
 }
+
    catch(error){
-      res.ststus(500).send({msg:"error in server"},error.message)
+      res.status(500).send({msg:"error in server",err:error.message})
    }
    
 }
@@ -83,7 +85,7 @@ const updateBlog=async function(req,res){
    let blogId=req.params.blogId
    let validBlog = await blogModel.findOne({_id:blogId},{isDeleted:false}) 
    if(!validBlog) return res.status(404).send({status:false, msg:"no such Blog"}) 
-   
+
    let updateBlog = await blogModel.findOneAndUpdate({_id:blogId},{$set:{isPublished:true,publishedAt:Date.now(),body:data.body,title:data.title},$push:{tags,subcategory}},{new:true})
    res.status(201).send({status:true, msg:updateBlog})
 }
