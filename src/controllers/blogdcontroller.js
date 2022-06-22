@@ -1,5 +1,4 @@
 const authorModel= require("../models/authorModel")
-const { findOneAndUpdate } = require("../models/blogModel")
 const blogModel=require("../models/blogModel")
 
 const createAuthor= async function(req,res){
@@ -78,18 +77,20 @@ const getBlog=async function(req,res){
 const updateBlog=async function(req,res){
    try{
    let blogId=req.params.blogId
-   let validBlog = await blogModel.findOne({id:blogId},{isDeleted:false}) 
+   let validBlog = await blogModel.findById({_id:blogId,isDeleted:false}) 
    if(!validBlog) return res.status(404).send({status:false, msg:"no such Blog"}) 
    let data = req.body
    let updateBlog = await blogModel.findOneAndUpdate(
-      {id: blogId},//condition
-      data,{$set:{isPublished:true,publishedAt:Date.now()}} //what you want to update
+      {_id: blogId},//condition
+      {$set:{data,isPublished:true,publishedAt:Date.now()}},//what you want to update
+      {new:true}
    )
    res.status(201).send({status:true, msg: updateBlog})
 }
 catch(err){
-   res.ststus(500).send({msg:"error in server"},error.message)
-}
+   console.log("This is the error :", err.message)
+      res.status(500).send({ msg: "Error", error: err.message })
+ }
 }
 
 
@@ -107,7 +108,7 @@ const deleteBlogById=async function(req,res){
    }
   catch(err){
       res.status(500).send({msg:"server issue",detail:err})
-  } 
+  }
    
 }
 
@@ -115,15 +116,16 @@ const deleteBlogById=async function(req,res){
 const deleteBlogByParams=async function(req,res){
    try{
       let  getobject=req.query
-      let  getData = await blogModel.find(getobject).select({_id:1})
-      if(!getData){
-      res.status(404).send({status: false,msg: "no such Blog"})
-      }
-      let  updateData= await blogModel.UpdateMany({_id:getData._id},{$set:{isDeleted:true}},{new:true})
+      console.log(getobject)
+     // let  getData = await blogModel.find(getobject).select({_id:1})
+     // if(!getData){
+    //  res.status(404).send({status: false,msg: "no such Blog"})
+    //  }
+      let  updateData= await blogModel.findOneAndUpdate({getobject},{$set:{isDeleted:true,deletedAt:Date.now()}},{new:true})
       res.status(200).send({msg:updateData})
    }
 catch(err){
-   res.status(500).send({msg:"server issue",detail:err})
+   res.status(500).send({msg:"server issue",detail:err.message})
 }
    
 }
