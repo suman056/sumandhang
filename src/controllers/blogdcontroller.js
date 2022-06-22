@@ -1,5 +1,4 @@
 const authorModel= require("../models/authorModel")
-const { findOneAndUpdate } = require("../models/blogModel")
 const blogModel=require("../models/blogModel")
 
 const createAuthor= async function(req,res){
@@ -119,7 +118,7 @@ const deleteBlogById=async function(req,res){
    }
   catch(err){
       res.status(500).send({msg:"server issue",detail:err})
-  } 
+  }
    
 }
 
@@ -127,15 +126,19 @@ const deleteBlogById=async function(req,res){
 const deleteBlogByParams=async function(req,res){
    try{
       let  getobject=req.query
-      let  getData = await blogModel.find(getobject).select({_id:1})
-      if(!getData){
-      res.status(404).send({status: false,msg: "no such Blog"})
-      }
-      let  updateData= await blogModel.UpdateMany({_id:getData._id},{$set:{isDeleted:true}},{new:true})
+      let  getData = await blogModel.find(getobject).find({isDeleted:false})
+      if(getData.length==0){
+      return res.status(404).send({status: false,msg: "no such Blog"})
+     }
+      
+     let  updateData= await blogModel.updateMany(
+      getobject,
+      {$set:{isDeleted:true,deletedAt:Date.now()}},
+      {new:true})
       res.status(200).send({msg:updateData})
    }
 catch(err){
-   res.status(500).send({msg:"server issue",detail:err})
+   res.status(500).send({msg:"server issue",detail:err.message})
 }
    
 }
