@@ -54,33 +54,18 @@ const createBlog=async function(req,res){
 
 const getBlog=async function(req,res){
    try{
-     let query=req.query
-
-     // let authorId=req.query.author_Id
-      //  let category=req.query.category
-      //  let tag=req.query.tags
-      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true}).find({query})
-      if(!allBlogs){
-         return res.status(404).send("there is no such documents")
-      } else {
-         return res.status(200).send({msg:allBlogs})
-        
-   }
-      // let query=req.query
+   
      
-      // let allBlogs=await blogModel.find({isDeleted:false,isPublished:true}).find(query)
-      //  if(allBlogs.length==0) return res.status(404).send({msg:"no such blog"})
+      let query=req.query
+     
+      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true},(query))
+       if(allBlogs.length==0)  return res.status(404).send({msg:"no such blog"})
 
-      //  res.status(200).send({msg:allBlogs})
- 
+       res.status(200).send({msg:allBlogs})
 }
 
    catch(error){
-
-      res.status(500).send({msg:"error in server",err:error.message})
-
-      res.status(500).send({msg:"error in server",error:error.message})
-
+          res.status(500).send({msg:"error in server",err:error.message})
    }
    
 }
@@ -113,11 +98,11 @@ const deleteBlogById=async function(req,res){
       else{
          let updateDelete= await blogModel.findOneAndUpdate({_id:findId._id},{$set:{isDeleted:true,deletedAt:Date.now()}},{new:true})
          console.log(updateDelete)
-         res.status(201).send({status:true, msg: "blog is deleted"})
+         res.status(200).send({status:true, msg: "blog is deleted"})
       }
    }
   catch(err){
-      res.status(500).send({msg:"server issue",detail:err})
+      res.status(500).send({msg:"server issue",error:err.message})
   }
    
 }
@@ -126,7 +111,7 @@ const deleteBlogById=async function(req,res){
 const deleteBlogByParams=async function(req,res){
    try{
       let  getobject=req.query
-      let  getData = await blogModel.find(getobject).find({isDeleted:false})
+      let  getData = await blogModel.find(getobject,{isDeleted:false})
       if(getData.length==0){
       return res.status(404).send({status: false,msg: "no such Blog"})
      }
