@@ -76,21 +76,19 @@ const getBlog=async function(req,res){
 
 const updateBlog=async function(req,res){
    try{
+   let data =req.body
+   let tags=data.tags
+   let subcategory=data.subcategory
    let blogId=req.params.blogId
-   let validBlog = await blogModel.findById({_id:blogId,isDeleted:false}) 
+   let validBlog = await blogModel.findOne({_id:blogId},{isDeleted:false}) 
    if(!validBlog) return res.status(404).send({status:false, msg:"no such Blog"}) 
-   let data = req.body
-   let updateBlog = await blogModel.findOneAndUpdate(
-      {_id: blogId},//condition
-      {$set:{data,isPublished:true,publishedAt:Date.now()}},//what you want to update
-      {new:true}
-   )
-   res.status(201).send({status:true, msg: updateBlog})
+   
+   let updateBlog = await blogModel.findOneAndUpdate({_id:blogId},{$set:{isPublished:true,publishedAt:Date.now(),body:data.body,title:data.title},$push:{tags,subcategory}},{new:true})
+   res.status(201).send({status:true, msg:updateBlog})
 }
 catch(err){
-   console.log("This is the error :", err.message)
-      res.status(500).send({ msg: "Error", error: err.message })
- }
+   res.status(500).send({msg:"error in server",err:err.message})
+}
 }
 
 
