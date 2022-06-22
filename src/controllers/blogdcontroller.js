@@ -123,7 +123,6 @@ const deleteBlogByParams=async function(req,res){
 catch(err){
    res.status(500).send({msg:"server issue",detail:err.message})
 }
-   
 }
 
 
