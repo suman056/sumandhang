@@ -57,19 +57,14 @@ const getBlog=async function(req,res){
    try{
 
       let query=req.query
+     
+      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true}).find(query)
+       if(allBlogs.length==0) return res.status(404).send({msg:"no such blog"})
 
-      // let authorId=req.query.author-Id
-      // let category=req.query.category
-      // let tag=req.query.tags
-      let allBlogs=await blogModel.find({isDeleted:false},{isPublished:true},query)
-      if(array.keys(allBlogs)!=0){
-         return res.status(200).send({msg:allBlogs})
-      } else {
-         return res.status(404).send("there is no such documents")
-   }
+       res.status(200).send({msg:allBlogs})
 }
    catch(error){
-      res.ststus(500).send({msg:"error in server"},error.message)
+      res.status(500).send({msg:"error in server",error:error.message})
    }
    
 }
