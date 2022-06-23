@@ -6,8 +6,8 @@ const createAuthor= async function(req,res){
    try{
       let data = req.body
       
-      if(!data.length)
-      return res.status(400).send({status:false,msg:"please give input"})
+      //if(data.lenght==0)
+      //return res.status(400).send({status:false,msg:"please give input"})
       if(!data.fname)
       return res.status(400).send({status:false, msg:"fname is mandatory"})
       if(!data.lname)
@@ -16,10 +16,10 @@ const createAuthor= async function(req,res){
       return res.status(400).send({status:false, msg:"title is mandatory"})
       if(!data.email)
       return res.status(400).send({status:false, msg:"email is mandatory"})
-      const emailCheck= await authorModel.find(data.email)
+      let emailCheck= await authorModel.findOne({email:data.email})
       if(emailCheck) return res.status(400).send({status:false,msg:"email already used"})
       if(!data.password)
-      return res.status(400).send({status:false, msg:"email is mandatory"})
+      return res.status(400).send({status:false, msg:"password is mandatory"})
 
 
       let saveData = await authorModel.create(data)
@@ -37,18 +37,17 @@ const createBlog=async function(req,res){
    try{
       let data = req.body
       
-      
-      if(!mongoose.isValidObjectId(data.authorId)) 
-      return res.status(400).send({status:false,msg:"invalid author Id"})
-      let authId = await authorModel.findById(data.authorId)
       if(!data.title)
       return res.status(400).send({status:false, msg:"title is mandatory"})
       if(!data.body)
       return res.status(400).send({status:false, msg:"body is mandatory"})
       if(!data.authorId)
       return res.status(400).send({status:false, msg:"authorId is mandatory"})
+      if(!mongoose.isValidObjectId(data.authorId)) 
+      return res.status(400).send({status:false,msg:"invalid author Id"})
+      let authId = await authorModel.findById(data.authorId)
        if (!authId)
-      return res.status(401).send({status: false, msg:"unvalid Author"})
+      return res.status(401).send({status: false, msg:"invalid Author"})
       if(!data.category)
       return res.status(400).send({status:false, msg:"category is mandatory"})
 
@@ -138,7 +137,6 @@ const deleteBlogByParams=async function(req,res){
 catch(err){
    res.status(500).send({msg:"server issue",detail:err.message})
 }
-   
 }
 
 
