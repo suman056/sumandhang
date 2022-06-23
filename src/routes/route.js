@@ -8,6 +8,9 @@ router.post("/authors",cmController.createAuthor)
 router.post("/blogs",cmController.createBlog)
 
 
+router.post("/login",cmController.loginAuthor)
+
+
 router.get("/blogs",cmController.getBlog)
 
 
