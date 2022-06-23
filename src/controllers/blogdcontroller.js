@@ -66,8 +66,8 @@ const getBlog=async function(req,res){
    try{
 
       let query=req.query
-       
-      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true},(query))
+       console.log(query)
+      let allBlogs=await blogModel.find({$and:[query,{isDeleted:false,isPublished:true}]})
       
        if(allBlogs.length==0) return res.status(404).send({msg:"no such blog"})
 
@@ -87,7 +87,7 @@ const updateBlog=async function(req,res){
    let subcategory=data.subcategory
    let blogId=req.params.blogId
    if(!mongoose.isValidObjectId(blogId)) return res.status(400).send({status:false,msg:"invalid object Id"})
-   let validBlog = await blogModel.findOne({_id:blogId},{isDeleted:false}) 
+   let validBlog = await blogModel.findOne({_id:blogId,isDeleted:false}) 
    if(!validBlog) return res.status(404).send({status:false, msg:"no such Blog"}) 
    
    let updateBlog = await blogModel.findOneAndUpdate({_id:blogId},{$set:{isPublished:true,publishedAt:Date.now(),body:data.body,title:data.title},$push:{tags,subcategory}},{new:true})
