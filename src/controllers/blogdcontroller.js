@@ -94,7 +94,7 @@ const getBlog=async function(req,res){
           res.status(500).send({msg:"error in server",err:error.message})
    } 
    
-
+}
 
 
 const updateBlog=async function(req,res){
@@ -160,5 +160,4 @@ module.exports={
    getBlog,
    updateBlog,
    deleteBlogById,
-   deleteBlogByParams
-}
+   deleteBlogByParams}

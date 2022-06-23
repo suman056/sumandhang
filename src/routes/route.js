@@ -12,13 +12,11 @@ router.get("/blogs",middleware.authentication,cmController.getBlog)
 
 router.post("/login",cmController.loginAuthor)
 
-router.get("/blogs",cmController.getBlog)
+router.put("/blogs/:blogId",middleware.authentication,middleware.Authorisation,cmController.updateBlog)
 
-router.put("/blogs/:blogId",cmController.updateBlog)
+router.delete("/blogs/:blogId",middleware.authentication,middleware.Authorisation,cmController.deleteBlogById)
 
-router.delete("/blogs/:blogId",cmController.deleteBlogById)
-
-router.delete("/blogs",cmController.deleteBlogByParams)
+router.delete("/blogs",middleware.authentication,middleware.Authorisation,cmController.deleteBlogByParams)
 
 
 
