@@ -4,12 +4,6 @@ const blogModel=require("../models/blogModel")
 const createAuthor= async function(req,res){
    try{
       let data = req.body
-<<<<<<< HEAD
-=======
-      
-      //if(data.lenght==0)
-      //return res.status(400).send({status:false,msg:"please give input"})
->>>>>>> 29c40d421ef5bd036727f3385a6e3a1defbade32
       if(!data.fname)
       return res.status(400).send({status:false, msg:"fname is mandatory"})
       if(!data.lname)
@@ -18,16 +12,11 @@ const createAuthor= async function(req,res){
       return res.status(400).send({status:false, msg:"title is mandatory"})
       if(!data.email)
       return res.status(400).send({status:false, msg:"email is mandatory"})
-<<<<<<< HEAD
-=======
       let emailCheck= await authorModel.findOne({email:data.email})
       if(emailCheck) return res.status(400).send({status:false,msg:"email already used"})
->>>>>>> 29c40d421ef5bd036727f3385a6e3a1defbade32
       if(!data.password)
       return res.status(400).send({status:false, msg:"password is mandatory"})
-
-
-      let saveData = await authorModel.create(data)
+       let saveData = await authorModel.create(data)
       res.status(201).send({msg: saveData})
    }catch(err){
       console.log("This is the error :", err.message)
@@ -35,33 +24,22 @@ const createAuthor= async function(req,res){
   }
 }
 
- 
-
-
 const createBlog=async function(req,res){
    try{
       let data = req.body
-<<<<<<< HEAD
-      let authId = await authorModel.findById(data.authorId)
-=======
-      
->>>>>>> 29c40d421ef5bd036727f3385a6e3a1defbade32
       if(!data.title)
       return res.status(400).send({status:false, msg:"title is mandatory"})
       if(!data.body)
       return res.status(400).send({status:false, msg:"body is mandatory"})
       if(!data.authorId)
       return res.status(400).send({status:false, msg:"authorId is mandatory"})
-<<<<<<< HEAD
       if (!authId)
       return res.status(401).send({status: false, msg:"unvalid Author"})
-=======
       if(!mongoose.isValidObjectId(data.authorId)) 
       return res.status(400).send({status:false,msg:"invalid author Id"})
       let authId = await authorModel.findById(data.authorId)
        if (!authId)
       return res.status(401).send({status: false, msg:"invalid Author"})
->>>>>>> 29c40d421ef5bd036727f3385a6e3a1defbade32
       if(!data.category)
       return res.status(400).send({status:false, msg:"category is mandatory"})
 
@@ -77,20 +55,14 @@ const createBlog=async function(req,res){
 
 const getBlog=async function(req,res){
    try{
-   
-     
       let query=req.query
-     
-      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true},(query))
+      let allBlogs=await blogModel.find({$and:[query,{isDeleted:false,isPublished:true}]})
        if(allBlogs.length==0)  return res.status(404).send({msg:"no such blog"})
-
        res.status(200).send({msg:allBlogs})
 }
-
-   catch(error){
+ catch(error){
           res.status(500).send({msg:"error in server",err:error.message})
-   }
-   
+   } 
 }
 
 
@@ -121,13 +93,11 @@ const deleteBlogById=async function(req,res){
       else{
          let updateDelete= await blogModel.findOneAndUpdate({_id:findId._id},{$set:{isDeleted:true,deletedAt:Date.now()}},{new:true})
          console.log(updateDelete)
-         res.status(200).send({status:true, msg: "blog is deleted"})
+         res.status(200).send({status:true, msg: "blog is deleted"})}
       }
-   }
-  catch(err){
+       catch(err){
       res.status(500).send({msg:"server issue",error:err.message})
-  }
-   
+  }  
 }
 
 
@@ -146,7 +116,7 @@ const deleteBlogByParams=async function(req,res){
       res.status(200).send({msg:updateData})
    }
 catch(err){
-   res.status(500).send({msg:"server issue",detail:err.message})
+   res.status(500).send({msg:"server issue",detail:err.message}) 
 }
 }
 
