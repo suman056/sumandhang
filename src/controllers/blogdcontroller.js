@@ -1,3 +1,6 @@
+
+const mongoose= require("mongoose")
+const jwt = require("jsonwebtoken");
 const authorModel= require("../models/authorModel")
 const blogModel=require("../models/blogModel")
 
@@ -53,6 +56,33 @@ const createBlog=async function(req,res){
 
 
 
+const loginAuthor = async function (req, res) {
+   try{
+   let userName = req.body.email;
+   let password = req.body.password;
+   if(!userName) return res.status(400).send({status:false,msg:"please give email"})
+   if(!password) return res.status(400).send({status:false,msg:"please give password"})
+   let author = await authorModel.findOne({ email: userName, password: password });
+   if (!author)
+     return res.status(400).send({status: false,msg: "username or the password is not correct",});
+     //creating token
+   let token = jwt.sign(
+     {
+       authorId: author._id.toString(),
+       projectName: "blogging-site"
+     },
+     "project1-group10"
+   );
+   res.setHeader("x-auth-token", token);
+   res.status(200).send({ status: true, data: token });
+ }catch(err){
+   console.log("This is the error :", err.message)
+ res.status(500).send({ msg: "Error", error: err.message })
+}
+}
+
+
+
 const getBlog=async function(req,res){
    try{
       let query=req.query
@@ -63,7 +93,8 @@ const getBlog=async function(req,res){
  catch(error){
           res.status(500).send({msg:"error in server",err:error.message})
    } 
-}
+   
+
 
 
 const updateBlog=async function(req,res){
@@ -73,6 +104,7 @@ const updateBlog=async function(req,res){
    let subcategory=data.subcategory
    let blogId=req.params.blogId
    let validBlog = await blogModel.findOne({_id:blogId},{isDeleted:false}) 
+   if(!mongoose.isValidObjectId(blogId)) return res.status(400).send({status:false,msg:"invalid blog Id"})
    if(!validBlog) return res.status(404).send({status:false, msg:"no such Blog"}) 
 
    let updateBlog = await blogModel.findOneAndUpdate({_id:blogId},{$set:{isPublished:true,publishedAt:Date.now(),body:data.body,title:data.title},$push:{tags,subcategory}},{new:true})
@@ -124,6 +156,7 @@ catch(err){
 module.exports={
    createAuthor,
    createBlog,
+   loginAuthor,
    getBlog,
    updateBlog,
    deleteBlogById,
