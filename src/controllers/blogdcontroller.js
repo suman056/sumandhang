@@ -1,5 +1,5 @@
-const authorModel= require("../models/authorModel")
 const mongoose= require("mongoose")
+const authorModel= require("../models/authorModel")
 const blogModel=require("../models/blogModel")
 
 const createAuthor= async function(req,res){
@@ -65,14 +65,14 @@ const getBlog=async function(req,res){
    try{
 
       let query=req.query
+      console.log(query)
        
-      let allBlogs=await blogModel.find({isDeleted:false,isPublished:true},(query))
+   let allBlogs=await blogModel.find
       
        if(allBlogs.length==0) return res.status(404).send({msg:"no such blog"})
 
        res.status(200).send({msg:allBlogs})
-}
-   catch(error){
+}catch(error){
       res.status(500).send({msg:"error in server",error:error.message})
    }
    
@@ -85,7 +85,7 @@ const updateBlog=async function(req,res){
    let tags=data.tags
    let subcategory=data.subcategory
    let blogId=req.params.blogId
-   if(!mongoose.isValidObjectId(blogId)) return res.status(400).send({status:false,msg:"invalid object Id"})
+   if(!mongoose.isValidObjectId(blogId)) return res.status(400).send({status:false,msg:"invalid blog Id"})
    let validBlog = await blogModel.findOne({_id:blogId},{isDeleted:false}) 
    if(!validBlog) return res.status(404).send({status:false, msg:"no such Blog"}) 
    
