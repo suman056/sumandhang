@@ -60,12 +60,14 @@ const createBlog=async function(req,res){
 
 const loginAuthor = async function (req, res) {
    try{
-   let userName = req.body.email;
-   let password = req.body.password;
-   if(!userName) return res.status(400).send({status:false,msg:"please give email"})
-   if(!password) return res.status(400).send({status:false,msg:"please give password"})
-   let author = await authorModel.findOne({ email: userName, password: password });
-   if (!author)
+      let data = req.body
+      if(Object.keys(data).length==0) return res.status(400).send({status:false,msg:"please provide data"})
+      let userName = req.body.email;
+      let password = req.body.password;
+      if(!userName) return res.status(400).send({status:false,msg:"please give email"})
+      if(!password) return res.status(400).send({status:false,msg:"please give password"})
+      let author = await authorModel.findOne({ email: userName, password: password });
+      if (!author)
      return res.status(400).send({status: false,msg: "username or the password is not correct",});
      //creating token
    let token = jwt.sign(
