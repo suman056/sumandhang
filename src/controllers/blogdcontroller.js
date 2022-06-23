@@ -7,6 +7,7 @@ const blogModel=require("../models/blogModel")
 const createAuthor= async function(req,res){
    try{
       let data = req.body
+      if(Object.keys(data).length==0) return res.status(400).send({status:false,msg:"please provide data"})
       if(!data.fname)
       return res.status(400).send({status:false, msg:"fname is mandatory"})
       if(!data.lname)
@@ -30,6 +31,7 @@ const createAuthor= async function(req,res){
 const createBlog=async function(req,res){
    try{
       let data = req.body
+      if(Object.keys(data).length==0) return res.status(400).send({status:false,msg:"please provide data"})
       if(!data.title)
       return res.status(400).send({status:false, msg:"title is mandatory"})
       if(!data.body)
