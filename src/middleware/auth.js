@@ -9,17 +9,17 @@ const authentication =function(req,res,next){
   let token = req.headers["X-Api-Key"];
     if (!token) token = req.headers["x-api-key"];
     if (!token) return res.status(401).send({ status: false, msg: "token must be present" });
-     try{
+    //  /try{
      dToken = jwt.verify(token, "project1-group10")
-     }
-    catch(error){
-      return res.status(400).send({status:false,msg:"you are not an user"})
-    }
-    if (!dToken){
+     if (!dToken){
       return res.status(400).send({ status: false, msg: "token is invalid" })}
- 
+     req.body.tokenId=dToken.authorId
       next();
     }
+    // catch(error){
+    //   return res.status(400).send({status:false,msg:"you are not an user"})
+    // }
+    
     catch(error)
     {
       res.status(500).send({msg:"Error",error:error.message})
@@ -38,8 +38,14 @@ const authentication =function(req,res,next){
     if(presentPrams.authorId)        
     if (!mongoose.isValidObjectId(presentPrams.authorId))
         return res.status(400).send({ status: false, msg: "invalid authorId" })
-    let authorId = await blogModel.findOne(presentPrams).select({ _id: 0, authorId: 1 })
-    if (!authorId) return res.status(404).send({ status: false, msg: "NoT found" })
+        let authorId
+        if(!presentPrams.blogId)
+        {  authorId = await blogModel.findOne(presentPrams).select({ _id: 0, authorId: 1 })}
+        else
+        {authorId = await blogModel.findOne({_id:presentPrams.blogId}).select({ _id: 0, authorId: 1 })} 
+   //change
+    if (!authorId) return res.status(404).send({ status: false, msg: "give proper blog id" })
+    
     if (dToken.authorId != authorId.authorId)
         return res.status(401).send({ status: false, msg: "unauthorised" })
 
