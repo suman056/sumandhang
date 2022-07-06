@@ -10,6 +10,7 @@ const isValidRequestBody = function (requestBody){
 //used in 11 fields{u:5, b:5, r:1 }
 const isValidData = function(value){
     if(typeof value === 'undefined' || value === null) return false;
+    if(typeof value != 'string') return false;
     if(typeof value === 'string' && value.trim().length === 0) return false;
     return true;    
 }
@@ -20,3 +21,4 @@ const isValidObjectId = function (objectId) {
 }
 
 
+module.exports = {isValidRequestBody, isValidData, isValidObjectId}

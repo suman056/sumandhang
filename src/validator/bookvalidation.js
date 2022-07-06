@@ -1,1 +1,1 @@
-const validate = require("../validator/validation.js")
+const validate = require("../validator/validation.")
