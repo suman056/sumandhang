@@ -22,3 +22,6 @@ const isValidObjectId = function (objectId) {
 
 
 module.exports = {isValidRequestBody, isValidData, isValidObjectId}
+module.exports.isValidRequestBody=isValidRequestBody
+module.exports.isValidData=isValidData
+module.exports.isValidObjectId=isValidObjectId
